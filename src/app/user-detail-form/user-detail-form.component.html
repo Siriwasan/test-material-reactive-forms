@@ -1,0 +1,97 @@
+<form class="example-form" [formGroup]="testForm">
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Full Name" formControlName="fullName">
+    <mat-error *ngFor="let validation of validation_messages.fullName">
+      <mat-error class="error-message" *ngIf="checkValidation('fullName', validation.type)">{{validation.message}}</mat-error>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Personal Indification Number" formControlName="PIN">
+    <mat-error *ngFor="let validation of validation_messages.PIN">
+      <mat-error class="error-message" *ngIf="checkValidation('PIN', validation.type)">{{validation.message}}</mat-error>
+    </mat-error>
+  </mat-form-field>
+
+  <div class="label-text">
+    Sex:
+    <mat-radio-group class="example-radio-group" formControlName="sex">
+      <mat-radio-button class="example-radio-button" value="Male">Male</mat-radio-button>
+      <mat-radio-button class="example-radio-button" value="Female">Female</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <mat-form-field class="example-full-width">
+    <input matInput [matDatepicker]="picker" placeholder="Date of Birth" formControlName="dateOfBirth">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('maritalStatus')">
+    Marrital Status:
+    <mat-radio-group class="example-radio-group" formControlName="maritalStatus">
+      <mat-radio-button class="example-radio-button" value="Single">Single</mat-radio-button>
+      <mat-radio-button class="example-radio-button" value="Married">Married</mat-radio-button>
+      <mat-radio-button class="example-radio-button" value="Divorce">Divorce</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('numberOfChild')">
+    <input matInput type="number" placeholder="Number of child" formControlName="numberOfChild">
+  </mat-form-field>
+
+  <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('loveAnimal')">
+    Do you love animal?:
+    <mat-radio-group class="example-radio-group" formControlName="loveAnimal">
+      <mat-radio-button class="example-radio-button" value="Yes">Yes</mat-radio-button>
+      <mat-radio-button class="example-radio-button" value="No">No</mat-radio-button>
+      <mat-radio-button class="example-radio-button" value="NotSure">Not Sure</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('havePet')">
+    Do you have pet?:
+    <mat-radio-group class="example-radio-group" formControlName="havePet">
+      <mat-radio-button class="example-radio-button" value="Yes">Yes</mat-radio-button>
+      <mat-radio-button class="example-radio-button" value="No">No</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div class="label-text" formGroupName="kindOfPet" *ngIf="hierarchyHelper.showHierarchy('kindOfPet')">
+    What kind of pet do you have?:
+    <mat-checkbox class="example-check-box" formControlName="dog">Dog</mat-checkbox>
+    <mat-checkbox class="example-check-box" formControlName="cat">Cat</mat-checkbox>
+    <mat-checkbox class="example-check-box" formControlName="mouse">Mouse</mat-checkbox>
+    <mat-checkbox class="example-check-box" formControlName="bird">Bird</mat-checkbox>
+  </div>
+
+  <mat-form-field class="example-full-width">
+    <mat-select placeholder="Favorite food" formControlName="favoriteFood">
+      <mat-option value="Steak">Steak</mat-option>
+      <mat-option value="Pizza">Pizza</mat-option>
+      <mat-option value="Tacos">Tacos</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</form>
+
+<br>
+<br>
+
+<button mat-raised-button color="primary" class="example-button" (click)="submit()">Submit</button>
+<button mat-raised-button color="warn" class="example-button" (click)="clear()">Clear</button>
+<button mat-raised-button color="accent" [disabled]="result===undefined" class="example-button" (click)="load()">Load</button>
+
+<br>
+<br>
+
+<div class="label-text">
+    Form value: {{ testForm.value | json }}
+</div>
+
+<br>
+
+<div class="label-text">
+    Form value: {{ result | json }}
+</div>

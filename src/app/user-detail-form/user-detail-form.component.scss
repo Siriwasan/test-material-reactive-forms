@@ -1,0 +1,32 @@
+.label-text {
+  font-family: Roboto;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 700px;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-check-box {
+  margin: 5px;
+}
+
+.example-button {
+  margin: 5px;
+}
+
+::ng-deep .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background: gray;
+}
+
+.error-message {
+  font-size: 12px;
+}

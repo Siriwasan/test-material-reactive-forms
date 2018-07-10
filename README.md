@@ -57,3 +57,52 @@ importing sass files into Angular Components. CLI default root directory with `~
 // src/app/app.component.scss
 @import '~src/sass/variables';
 ```
+
+## Setup Angular Material
+
+
+### By add Angular Material Schematic
+
+``` npm
+ng add @angular/material@6.2.1
+```
+
+Note that @angular/material@6.3.0 broken
+
+### By install Angular Material manually
+
+install angular material components
+
+``` npm
+npm install --save @angular/material @angular/cdk @angular/animations
+```
+
+import angular material theme
+
+``` sass
+// scr/sass/style.scss
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+```
+
+and then import Roboto font in `app.component.html`
+
+``` html
+// app.component.html
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+```
+
+## Localization DatePicker
+
+``` npm
+npm install --save moment
+npm install --save @angular/material-moment-adapter
+```
+
+## Set host
+
+ng serve --host=0.0.0.0
+
+or
+
+in the .angular-cli.json file
+"defaults": { "serve": { "host": "0.0.0.0", "port": 4201 },
