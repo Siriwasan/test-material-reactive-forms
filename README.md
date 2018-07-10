@@ -2,26 +2,58 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
-## Development server
+## Setup SCSS
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+create new project with scss
 
-## Code scaffolding
+``` npm
+ng new my-sassy-app --style=scss
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+organize sass follow [7-1 Pattern](https://sass-guidelin.es/#the-7-1-pattern)
 
-## Build
+``` json
+|- src/
+    |- sass/
+        |- _variables.scss
+        |- _mixins.scss
+        |- styles.scss
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+re-locate main style sheet to sass directory
 
-## Running unit tests
+``` json
+{
+  ...
+  projects: {
+    [your_project_name]: {
+      ...
+      architect: {
+        build: {
+          ...
+          options: {
+            styles:{
+              "src/sass/styles.scss"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+import the `_variables.scss` and `_mixins.scss` into the main `styles.scss`
 
-## Running end-to-end tests
+``` sass
+// src/sass/styles.scss
+@import './variables';
+@import './mixins';
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+importing sass files into Angular Components. CLI default root directory with `~`
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+``` sass
+// src/app/app.component.scss
+@import '~src/sass/variables';
+```
