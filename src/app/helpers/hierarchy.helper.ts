@@ -1,8 +1,10 @@
 import { FormGroup, ValidatorFn } from '@angular/forms';
 
-export interface ControlHierarchy {
+export interface Field {
   name: string;
-  conditions: Condition[]; // one control can have no condition or many conditions
+  value?: any;
+  validation?: ValidatorFn;
+  conditions?: Condition[];
 }
 
 export interface Condition {
@@ -10,13 +12,6 @@ export interface Condition {
   subcontrols: string[]; // one result can have many control
 }
 // Note: if no any control declaration in hierarchy, default is SHOW
-
-export interface Field {
-  name: string;
-  value?: any;
-  validation?: ValidatorFn;
-  conditions?: Condition[];
-}
 
 interface HierarchyNode {
   controlName: string;
@@ -26,13 +21,13 @@ interface HierarchyNode {
 
 export class HierarchyHelper {
   private formGroup: FormGroup;
-  private hierarchy: ControlHierarchy[];
+  private hierarchy: Field[];
   private hierarchyNodes: HierarchyNode[] = [];
   private isAlwayShow = false;
 
   constructor() { }
 
-  initializeHierarchy(form: FormGroup, hierarchy: any[]) {
+  initializeHierarchy(form: FormGroup, hierarchy: Field[]) {
     this.formGroup = form;
     this.hierarchy = hierarchy;
 
@@ -88,7 +83,12 @@ export class HierarchyHelper {
               condition.subcontrols.forEach(subcontrol => {
                 // if new value has no condition or new value's condition is not the same, reset the value
                 if (newCondition === undefined || newCondition.subcontrols.find(p => p === subcontrol) === undefined) {
-                  this.formGroup.get(subcontrol).reset();
+                  const sub = this.formGroup.get(subcontrol);
+
+                  // if it is a angular material control, reset value
+                  if (sub !== null) {
+                    sub.reset();
+                  }
                 }
               });
               break;

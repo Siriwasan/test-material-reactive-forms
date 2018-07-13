@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { HierarchyHelper, ControlHierarchy, Field } from '../helpers/hierarchy.helper';
+import { HierarchyHelper, Field } from '../helpers/hierarchy.helper';
 import { PINValidator } from '../validators/PIN.validator';
 
 @Component({
@@ -67,40 +67,23 @@ export class UserDetailFormComponent implements OnInit {
     name: 'havePet',
     conditions: [{
       values: ['Yes'],
-      subcontrols: ['kindOfPet']
+      subcontrols: ['kindOfPet', 'dog', 'cat', 'mouse', 'bird']
     }]
+  }, {
+    name: 'dog',
+  }, {
+    name: 'cat',
+    conditions: [{
+      values: [true],
+      subcontrols: ['favoriteFood']
+    }]
+  }, {
+    name: 'mouse',
+  }, {
+    name: 'bird',
   }, {
     name: 'favoriteFood',
     value: 'Pizza'
-  }];
-
-  hierarchy: ControlHierarchy[] = [{
-    name: 'maritalStatus',
-    conditions: [{
-      values: ['Married'],
-      subcontrols: ['numberOfChild', 'marriedDate']
-    }, {
-      values: ['Divorce'],
-      subcontrols: ['numberOfChild', 'marriedDate', 'divorceDate']
-    }]
-  }, {
-    name: 'loveAnimal',
-    conditions: [{
-      values: ['Yes', 'NotSure'],
-      subcontrols: ['havePet'],
-    }]
-  }, {
-    name: 'havePet',
-    conditions: [{
-      values: ['Yes'],
-      subcontrols: ['kindOfPet']
-    }]
-  }, {
-    name: 'kindOfPet',
-    conditions: [{
-      values: [{'dog': null, 'cat': true, 'mouse': true, 'bird': null}],
-      subcontrols: ['favoriteFood']
-    }]
   }];
 
   validation_messages = {
@@ -123,28 +106,7 @@ export class UserDetailFormComponent implements OnInit {
   }
 
   createForm() {
-    this.testForm = this.formBuilder.group({
-      // fullName: ['', Validators.required],
-      // PIN: ['', Validators.compose([
-      //   Validators.required,
-      //   PINValidator.validPIN
-      // ])],
-      // sex: null,
-      // dateOfBirth: null,
-      // maritalStatus: null,
-      // numberOfChild: null,
-      // marriedDate: null,
-      // divorceDate: null,
-      // loveAnimal: null,
-      // havePet: null,
-      kindOfPet: this.formBuilder.group({
-        dog: null,
-        cat: null,
-        mouse: null,
-        bird: null,
-      }),
-      // favoriteFood: null,
-    });
+    this.testForm = this.formBuilder.group({});
 
     this.testControl.forEach(e => {
       this.testForm.addControl(e.name, this.formBuilder.control(e.value, e.validation));
@@ -152,17 +114,7 @@ export class UserDetailFormComponent implements OnInit {
   }
 
   submit() {
-    // const i = Number(this.testForm.value.radioGroup1_2);
-    // this.testForm.get('radioGroup1_2').setValue(i);
-    // console.log(i);
-
     this.result = {...this.testForm.value};
-
-    // const tmp = this.result['checkBoxGroup'];
-    // delete this.result['checkBoxGroup'];
-    // this.result['checkBox1'] = tmp.checkBox1;
-    // this.result['checkBox2'] = tmp.checkBox2;
-    // this.result['checkBox3'] = tmp.checkBox3;
   }
 
   clear() {
@@ -170,15 +122,6 @@ export class UserDetailFormComponent implements OnInit {
   }
 
   load() {
-    // this.result['checkBoxGroup'] = {
-    //   checkBox1: this.result['checkBox1'],
-    //   checkBox2: this.result['checkBox2'],
-    //   checkBox3: this.result['checkBox3'],
-    // };
-    // delete this.result['checkBox1'];
-    // delete this.result['checkBox2'];
-    // delete this.result['checkBox3'];
-
     this.testForm.setValue(this.result);
   }
 

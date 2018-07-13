@@ -70,7 +70,7 @@
     </mat-radio-group>
   </div>
 
-  <div class="label-text" formGroupName="kindOfPet" *ngIf="hierarchyHelper.showHierarchy('kindOfPet')">
+  <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('kindOfPet')">
     What kind of pet do you have?:
     <mat-checkbox class="example-check-box" formControlName="dog">Dog</mat-checkbox>
     <mat-checkbox class="example-check-box" formControlName="cat">Cat</mat-checkbox>
