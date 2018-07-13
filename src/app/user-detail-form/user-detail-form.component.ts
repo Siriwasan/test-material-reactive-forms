@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { HierarchyHelper, Control } from '../helpers/hierarchy.helper';
+import { HierarchyHelper, ControlHierarchy } from '../helpers/hierarchy.helper';
 import { PINValidator } from '../validators/PIN.validator';
 
 @Component({
@@ -27,15 +27,32 @@ export class UserDetailFormComponent implements OnInit {
   hierarchyHelper = new HierarchyHelper();
   result: object;
 
-  hierarchy: Control[] = [{
-    name: 'maritalStatus', conditions: [{
-      values: ['Married', 'Divorce'], subcontrols: [{
-        name: 'numberOfChild'}, {
-        name: 'loveAnimal', conditions: [{
-          values: ['Yes', 'NotSure'], subcontrols: [{
-            name: 'havePet', conditions: [{
-              values: ['Yes'], subcontrols: [{
-                name: 'kindOfPet'}]}]}]}]}]
+  hierarchy: ControlHierarchy[] = [{
+    name: 'maritalStatus',
+    conditions: [{
+      values: ['Married'],
+      subcontrols: ['numberOfChild', 'marriedDate']
+    }, {
+      values: ['Divorce'],
+      subcontrols: ['numberOfChild', 'marriedDate', 'divorceDate']
+    }]
+  }, {
+    name: 'loveAnimal',
+    conditions: [{
+      values: ['Yes', 'NotSure'],
+      subcontrols: ['havePet'],
+    }]
+  }, {
+    name: 'havePet',
+    conditions: [{
+      values: ['Yes'],
+      subcontrols: ['kindOfPet']
+    }]
+  }, {
+    name: 'kindOfPet',
+    conditions: [{
+      values: [{'dog': null, 'cat': true, 'mouse': true, 'bird': null}],
+      subcontrols: ['favoriteFood']
     }]
   }];
 
@@ -69,6 +86,8 @@ export class UserDetailFormComponent implements OnInit {
       dateOfBirth: null,
       maritalStatus: null,
       numberOfChild: null,
+      marriedDate: null,
+      divorceDate: null,
       loveAnimal: null,
       havePet: null,
       kindOfPet: this.formBuilder.group({

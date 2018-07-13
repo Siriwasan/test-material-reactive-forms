@@ -23,9 +23,9 @@
   </div>
 
   <mat-form-field class="example-full-width">
-    <input matInput [matDatepicker]="picker" placeholder="Date of Birth" formControlName="dateOfBirth">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+    <input matInput [matDatepicker]="DOBDatePicker" placeholder="Date of Birth" formControlName="dateOfBirth">
+    <mat-datepicker-toggle matSuffix [for]="DOBDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #DOBDatePicker></mat-datepicker>
   </mat-form-field>
 
   <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('maritalStatus')">
@@ -39,6 +39,18 @@
 
   <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('numberOfChild')">
     <input matInput type="number" placeholder="Number of child" formControlName="numberOfChild">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('marriedDate')">
+    <input matInput [matDatepicker]="marriedDatePicker" placeholder="Married Date" formControlName="marriedDate">
+    <mat-datepicker-toggle matSuffix [for]="marriedDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #marriedDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('divorceDate')">
+    <input matInput [matDatepicker]="divorceDatePicker" placeholder="Divorce Date" formControlName="divorceDate">
+    <mat-datepicker-toggle matSuffix [for]="divorceDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #divorceDatePicker></mat-datepicker>
   </mat-form-field>
 
   <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('loveAnimal')">
@@ -66,7 +78,7 @@
     <mat-checkbox class="example-check-box" formControlName="bird">Bird</mat-checkbox>
   </div>
 
-  <mat-form-field class="example-full-width">
+  <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('favoriteFood')">
     <mat-select placeholder="Favorite food" formControlName="favoriteFood">
       <mat-option value="Steak">Steak</mat-option>
       <mat-option value="Pizza">Pizza</mat-option>
