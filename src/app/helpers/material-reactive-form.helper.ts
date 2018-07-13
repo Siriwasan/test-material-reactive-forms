@@ -13,50 +13,65 @@ export interface Condition {
 }
 // Note: if no any control declaration in hierarchy, default is SHOW
 
-interface HierarchyNode {
+interface FieldNode {
   controlName: string;
   parentControl: string;
   conditionValues: any[];
 }
 
-export class HierarchyHelper {
+export class MaterialReactiveFormHelper {
   private formGroup: FormGroup;
-  private hierarchy: Field[];
-  private hierarchyNodes: HierarchyNode[] = [];
+  private fields: Field[];
+  private fieldNodes: FieldNode[] = [];
   private isAlwayShow = false;
 
   constructor() { }
 
-  initializeHierarchy(form: FormGroup, hierarchy: Field[]) {
-    this.formGroup = form;
-    this.hierarchy = hierarchy;
+  createMaterialReactiveForm(formBuilder: FormBuilder, controls: object): FormGroup {
+    // remap the API to be suitable for iterating over it
+    this.fields =
+      Object.keys(controls)
+        .map(prop => {
+          return Object.assign({}, {name: prop} , controls[prop]);
+        });
 
+    this.formGroup = formBuilder.group({});
+    this.fields.forEach(e => {
+      this.formGroup.addControl(e.name, formBuilder.control(e.value, e.validation));
+    });
+
+    this.initializeHierarchy();
+
+    return this.formGroup;
+  }
+
+  private initializeHierarchy() {
     this.createHierarchyNodes();
     this.subscribeValueChanges();
 
-    console.log(this.hierarchyNodes);
+    console.log(this.fieldNodes);
   }
 
   private createHierarchyNodes() {
-    this.hierarchy.forEach(control => {
+    this.fields.forEach(control => {
       if (control.conditions !== undefined) {
         control.conditions.forEach(condition => {
           for (let index = 0; index < condition.subcontrols.length; index++) {
             const subcontrol = condition.subcontrols[index];
 
-            const newNode: HierarchyNode = {
+            const newNode: FieldNode = {
               controlName: null,
               parentControl: control.name,
               conditionValues: []
             };
 
             const sameControlandParentNode =
-              this.hierarchyNodes.find(node => node.controlName === subcontrol && node.parentControl === control.name);
+              this.fieldNodes.find(node => node.controlName === subcontrol && node.parentControl === control.name);
 
             if ( sameControlandParentNode === undefined) {
               newNode.controlName = subcontrol;
               newNode.conditionValues.push(...condition.values);
-              this.hierarchyNodes.push(newNode);
+              this.fieldNodes.push(newNode);
             } else {
               sameControlandParentNode.conditionValues.push(...condition.values);
             }
@@ -67,10 +82,10 @@ export class HierarchyHelper {
   }
 
   private subscribeValueChanges() {
-    this.hierarchy.forEach(control => {
+    this.fields.forEach(control => {
       this.formGroup.get(control.name).valueChanges.subscribe(newValue => {
         const oldValue = this.formGroup.value[control.name];
-        const targetNode = this.hierarchy.find(node => node.name === control.name);
+        const targetNode = this.fields.find(node => node.name === control.name);
 
         if (control.conditions !== undefined) {
           for (let index = 0; index < targetNode.conditions.length; index++) {
@@ -104,7 +119,7 @@ export class HierarchyHelper {
       return true;
     }
 
-    const targetNodes = this.hierarchyNodes.filter(node => node.controlName === controlName);
+    const targetNodes = this.fieldNodes.filter(node => node.controlName === controlName);
 
     if (targetNodes.length === 0) {
       return true;

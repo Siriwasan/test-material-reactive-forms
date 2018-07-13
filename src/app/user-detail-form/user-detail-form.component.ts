@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { HierarchyHelper, Field } from '../helpers/hierarchy.helper';
+import { MaterialReactiveFormHelper } from '../helpers/material-reactive-form.helper';
 import { PINValidator } from '../validators/PIN.validator';
 
 @Component({
@@ -23,70 +23,125 @@ import { PINValidator } from '../validators/PIN.validator';
   ]
 })
 export class UserDetailFormComponent implements OnInit {
-  testForm: FormGroup;
-  hierarchyHelper = new HierarchyHelper();
+  userDetailForm: FormGroup;
+  hierarchyHelper = new MaterialReactiveFormHelper();
   result: object;
 
-  controls: Field[] = [{
-    name: 'fullName',
-    value: 'Siriwasan',
-    validation: Validators.required
-  }, {
-    name: 'PIN',
-    value: '123',
-    validation: Validators.compose([
-        Validators.required,
-        PINValidator.validPIN
-      ])
-  }, {
-    name: 'sex',
-  }, {
-    name: 'dateOfBirth',
-  }, {
-    name: 'maritalStatus',
-    conditions: [{
-      values: ['Married'],
-      subcontrols: ['numberOfChild', 'marriedDate']
-    }, {
-      values: ['Divorce'],
-      subcontrols: ['numberOfChild', 'marriedDate', 'divorceDate']
-    }]
-  }, {
-    name: 'numberOfChild',
-  }, {
-    name: 'marriedDate',
-  }, {
-    name: 'divorceDate',
-  }, {
-    name: 'loveAnimal',
-    conditions: [{
-      values: ['Yes', 'NotSure'],
-      subcontrols: ['havePet'],
-    }]
-  }, {
-    name: 'havePet',
-    conditions: [{
-      values: ['Yes'],
-      subcontrols: ['kindOfPet', 'dog', 'cat', 'mouse', 'bird']
-    }]
-  }, {
-    name: 'dog',
-    value: true
-  }, {
-    name: 'cat',
-    value: false,
-    conditions: [{
-      values: [true],
-      subcontrols: ['favoriteFood']
-    }]
-  }, {
-    name: 'mouse',
-  }, {
-    name: 'bird',
-  }, {
-    name: 'favoriteFood',
-    value: 'Pizza'
-  }];
+  // controls: Field[] = [{
+  //   name: 'fullName',
+  //   value: 'Siriwasan',
+  //   validation: Validators.required
+  // }, {
+  //   name: 'PIN',
+  //   value: '123',
+  //   validation: Validators.compose([
+  //       Validators.required,
+  //       PINValidator.validPIN
+  //     ])
+  // }, {
+  //   name: 'sex',
+  // }, {
+  //   name: 'dateOfBirth',
+  // }, {
+  //   name: 'maritalStatus',
+  //   conditions: [{
+  //     values: ['Married'],
+  //     subcontrols: ['numberOfChild', 'marriedDate']
+  //   }, {
+  //     values: ['Divorce'],
+  //     subcontrols: ['numberOfChild', 'marriedDate', 'divorceDate']
+  //   }]
+  // }, {
+  //   name: 'numberOfChild',
+  // }, {
+  //   name: 'marriedDate',
+  // }, {
+  //   name: 'divorceDate',
+  // }, {
+  //   name: 'loveAnimal',
+  //   conditions: [{
+  //     values: ['Yes', 'NotSure'],
+  //     subcontrols: ['havePet'],
+  //   }]
+  // }, {
+  //   name: 'havePet',
+  //   conditions: [{
+  //     values: ['Yes'],
+  //     subcontrols: ['kindOfPet', 'dog', 'cat', 'mouse', 'bird']
+  //   }]
+  // }, {
+  //   name: 'dog',
+  //   value: true
+  // }, {
+  //   name: 'cat',
+  //   value: false,
+  //   conditions: [{
+  //     values: [true],
+  //     subcontrols: ['favoriteFood']
+  //   }]
+  // }, {
+  //   name: 'mouse',
+  // }, {
+  //   name: 'bird',
+  // }, {
+  //   name: 'favoriteFood',
+  //   value: 'Pizza'
+  // }];
+
+  controls = {
+    fullName: {
+      value: 'Siriwasan',
+      validation: Validators.required
+    },
+    PIN: {
+      value: '123',
+      validation: Validators.compose([
+          Validators.required,
+          PINValidator.validPIN
+        ])
+    },
+    sex: {},
+    dateOfBirth: {},
+    maritalStatus: {
+      conditions: [{
+        values: ['Married'],
+        subcontrols: ['numberOfChild', 'marriedDate']
+      }, {
+        values: ['Divorce'],
+        subcontrols: ['numberOfChild', 'marriedDate', 'divorceDate']
+      }]
+    },
+    numberOfChild: {},
+    marriedDate: {},
+    divorceDate: {},
+    loveAnimal: {
+      conditions: [{
+        values: ['Yes', 'NotSure'],
+        subcontrols: ['havePet'],
+      }]
+    },
+    havePet: {
+      conditions: [{
+        values: ['Yes'],
+        subcontrols: ['kindOfPet', 'dog', 'cat', 'mouse', 'bird']
+      }]
+    },
+    dog: {
+      value: true
+    },
+    cat: {
+      value: false,
+      conditions: [{
+        values: [true],
+        subcontrols: ['favoriteFood']
+      }]
+    },
+    mouse: {},
+    bird: {},
+    favoriteFood: {
+      value: 'Pizza'
+    }
+  };
 
   validation_messages = {
     fullName: [
@@ -100,36 +155,27 @@ export class UserDetailFormComponent implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder) {
-    this.createForm();
-    this.hierarchyHelper.initializeHierarchy(this.testForm, this.controls);
+    this.userDetailForm = this.hierarchyHelper.createMaterialReactiveForm(this.formBuilder, this.controls);
   }
 
   ngOnInit() {
   }
 
-  createForm() {
-    this.testForm = this.formBuilder.group({});
-
-    this.controls.forEach(e => {
-      this.testForm.addControl(e.name, this.formBuilder.control(e.value, e.validation));
-    });
-  }
-
   submit() {
-    this.result = {...this.testForm.value};
+    this.result = {...this.userDetailForm.value};
   }
 
   clear() {
-    this.testForm.reset();
+    this.userDetailForm.reset();
   }
 
   load() {
-    this.testForm.setValue(this.result);
+    this.userDetailForm.setValue(this.result);
   }
 
   checkValidation(controlName: string, validatonType: string): boolean {
-    return this.testForm.get(controlName).hasError(validatonType) &&
-      (this.testForm.get(controlName).dirty || this.testForm.get(controlName).touched);
+    return this.userDetailForm.get(controlName).hasError(validatonType) &&
+      (this.userDetailForm.get(controlName).dirty || this.userDetailForm.get(controlName).touched);
     // return true;
   }
 }

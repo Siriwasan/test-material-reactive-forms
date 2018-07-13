@@ -1,4 +1,4 @@
-<form class="example-form" [formGroup]="testForm">
+<form class="example-form" [formGroup]="userDetailForm">
 
   <mat-form-field class="example-full-width">
     <input matInput placeholder="Full Name" formControlName="fullName">
@@ -72,10 +72,10 @@
 
   <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('kindOfPet')">
     What kind of pet do you have?:
-    <mat-checkbox class="example-check-box" [indeterminate]="testForm.value['dog'] === null" formControlName="dog">Dog</mat-checkbox>
-    <mat-checkbox class="example-check-box" [indeterminate]="testForm.value['cat'] === null" formControlName="cat">Cat</mat-checkbox>
-    <mat-checkbox class="example-check-box" [indeterminate]="testForm.value['mouse'] === null" formControlName="mouse">Mouse</mat-checkbox>
-    <mat-checkbox class="example-check-box" [indeterminate]="testForm.value['bird'] === null" formControlName="bird">Bird</mat-checkbox>
+    <mat-checkbox class="example-check-box" [indeterminate]="userDetailForm.value['dog'] === null" formControlName="dog">Dog</mat-checkbox>
+    <mat-checkbox class="example-check-box" [indeterminate]="userDetailForm.value['cat'] === null" formControlName="cat">Cat</mat-checkbox>
+    <mat-checkbox class="example-check-box" [indeterminate]="userDetailForm.value['mouse'] === null" formControlName="mouse">Mouse</mat-checkbox>
+    <mat-checkbox class="example-check-box" [indeterminate]="userDetailForm.value['bird'] === null" formControlName="bird">Bird</mat-checkbox>
   </div>
 
   <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('favoriteFood')">
@@ -99,7 +99,7 @@
 <br>
 
 <div class="label-text">
-    Form value: {{ testForm.value | json }}
+    Form value: {{ userDetailForm.value | json }}
 </div>
 
 <br>
