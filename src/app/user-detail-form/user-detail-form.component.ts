@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { HierarchyHelper, ControlHierarchy } from '../helpers/hierarchy.helper';
+import { HierarchyHelper, ControlHierarchy, Field } from '../helpers/hierarchy.helper';
 import { PINValidator } from '../validators/PIN.validator';
 
 @Component({
@@ -26,6 +26,53 @@ export class UserDetailFormComponent implements OnInit {
   testForm: FormGroup;
   hierarchyHelper = new HierarchyHelper();
   result: object;
+
+  testControl: Field[] = [{
+    name: 'fullName',
+    value: 'Siriwasan',
+    validation: Validators.required
+  }, {
+    name: 'PIN',
+    value: '123',
+    validation: Validators.compose([
+        Validators.required,
+        PINValidator.validPIN
+      ])
+  }, {
+    name: 'sex',
+  }, {
+    name: 'dateOfBirth',
+  }, {
+    name: 'maritalStatus',
+    conditions: [{
+      values: ['Married'],
+      subcontrols: ['numberOfChild', 'marriedDate']
+    }, {
+      values: ['Divorce'],
+      subcontrols: ['numberOfChild', 'marriedDate', 'divorceDate']
+    }]
+  }, {
+    name: 'numberOfChild',
+  }, {
+    name: 'marriedDate',
+  }, {
+    name: 'divorceDate',
+  }, {
+    name: 'loveAnimal',
+    conditions: [{
+      values: ['Yes', 'NotSure'],
+      subcontrols: ['havePet'],
+    }]
+  }, {
+    name: 'havePet',
+    conditions: [{
+      values: ['Yes'],
+      subcontrols: ['kindOfPet']
+    }]
+  }, {
+    name: 'favoriteFood',
+    value: 'Pizza'
+  }];
 
   hierarchy: ControlHierarchy[] = [{
     name: 'maritalStatus',
@@ -69,7 +116,7 @@ export class UserDetailFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
     this.createForm();
-    this.hierarchyHelper.initializeHierarchy(this.testForm, this.hierarchy);
+    this.hierarchyHelper.initializeHierarchy(this.testForm, this.testControl);
   }
 
   ngOnInit() {
@@ -77,26 +124,30 @@ export class UserDetailFormComponent implements OnInit {
 
   createForm() {
     this.testForm = this.formBuilder.group({
-      fullName: ['', Validators.required],
-      PIN: ['', Validators.compose([
-        Validators.required,
-        PINValidator.validPIN
-      ])],
-      sex: null,
-      dateOfBirth: null,
-      maritalStatus: null,
-      numberOfChild: null,
-      marriedDate: null,
-      divorceDate: null,
-      loveAnimal: null,
-      havePet: null,
+      // fullName: ['', Validators.required],
+      // PIN: ['', Validators.compose([
+      //   Validators.required,
+      //   PINValidator.validPIN
+      // ])],
+      // sex: null,
+      // dateOfBirth: null,
+      // maritalStatus: null,
+      // numberOfChild: null,
+      // marriedDate: null,
+      // divorceDate: null,
+      // loveAnimal: null,
+      // havePet: null,
       kindOfPet: this.formBuilder.group({
         dog: null,
         cat: null,
         mouse: null,
         bird: null,
       }),
-      favoriteFood: null,
+      // favoriteFood: null,
+    });
+
+    this.testControl.forEach(e => {
+      this.testForm.addControl(e.name, this.formBuilder.control(e.value, e.validation));
     });
   }
 

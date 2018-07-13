@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ValidatorFn } from '@angular/forms';
 
 export interface ControlHierarchy {
   name: string;
@@ -10,6 +10,13 @@ export interface Condition {
   subcontrols: string[]; // one result can have many control
 }
 // Note: if no any control declaration in hierarchy, default is SHOW
+
+export interface Field {
+  name: string;
+  value?: any;
+  validation?: ValidatorFn;
+  conditions?: Condition[];
+}
 
 interface HierarchyNode {
   controlName: string;
@@ -35,53 +42,57 @@ export class HierarchyHelper {
     console.log(this.hierarchyNodes);
   }
 
-  private createHierarchyNodes(controls: ControlHierarchy[]) {
+  private createHierarchyNodes(controls: Field[]) {
     controls.forEach(control => {
-      control.conditions.forEach(condition => {
-        for (let index = 0; index < condition.subcontrols.length; index++) {
-          const subcontrol = condition.subcontrols[index];
+      if (control.conditions !== undefined) {
+        control.conditions.forEach(condition => {
+          for (let index = 0; index < condition.subcontrols.length; index++) {
+            const subcontrol = condition.subcontrols[index];
 
-          const newNode: HierarchyNode = {
-            controlName: null,
-            parentControl: control.name,
-            conditionValues: []
-          };
+            const newNode: HierarchyNode = {
+              controlName: null,
+              parentControl: control.name,
+              conditionValues: []
+            };
 
-          const sameControlandParentNode =
-            this.hierarchyNodes.find(node => node.controlName === subcontrol && node.parentControl === control.name);
+            const sameControlandParentNode =
+              this.hierarchyNodes.find(node => node.controlName === subcontrol && node.parentControl === control.name);
 
-          if ( sameControlandParentNode === undefined) {
-            newNode.controlName = subcontrol;
-            newNode.conditionValues.push(...condition.values);
-            this.hierarchyNodes.push(newNode);
-          } else {
-            sameControlandParentNode.conditionValues.push(...condition.values);
+            if ( sameControlandParentNode === undefined) {
+              newNode.controlName = subcontrol;
+              newNode.conditionValues.push(...condition.values);
+              this.hierarchyNodes.push(newNode);
+            } else {
+              sameControlandParentNode.conditionValues.push(...condition.values);
+            }
           }
-        }
-      });
+        });
+      }
     });
   }
 
-  private subscribeValueChanges(controls: ControlHierarchy[]) {
+  private subscribeValueChanges(controls: Field[]) {
     controls.forEach(control => {
       this.formGroup.get(control.name).valueChanges.subscribe(newValue => {
         const oldValue = this.formGroup.value[control.name];
-
         const targetNode = this.hierarchy.find(node => node.name === control.name);
-        for (let index = 0; index < targetNode.conditions.length; index++) {
-          const condition = targetNode.conditions[index];
 
-          // if old value is in hierarchy, reset controls
-          if (condition.values.find(value => this.isEquivalent(value, oldValue)) !== undefined) {
-            const newCondition = targetNode.conditions.find(cc => cc.values.find(value => this.isEquivalent(value, newValue)));
+        if (control.conditions !== undefined) {
+          for (let index = 0; index < targetNode.conditions.length; index++) {
+            const condition = targetNode.conditions[index];
 
-            condition.subcontrols.forEach(subcontrol => {
-              // if new value has no condition or new value's condition is not the same, reset the value
-              if (newCondition === undefined || newCondition.subcontrols.find(p => p === subcontrol) === undefined) {
-                this.formGroup.get(subcontrol).reset();
-              }
-            });
-            break;
+            // if old value is in hierarchy, reset controls
+            if (condition.values.find(value => this.isEquivalent(value, oldValue)) !== undefined) {
+              const newCondition = targetNode.conditions.find(cc => cc.values.find(value => this.isEquivalent(value, newValue)));
+
+              condition.subcontrols.forEach(subcontrol => {
+                // if new value has no condition or new value's condition is not the same, reset the value
+                if (newCondition === undefined || newCondition.subcontrols.find(p => p === subcontrol) === undefined) {
+                  this.formGroup.get(subcontrol).reset();
+                }
+              });
+              break;
+            }
           }
         }
       });
