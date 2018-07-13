@@ -1,4 +1,4 @@
-import { FormGroup, ValidatorFn } from '@angular/forms';
+import { FormGroup, ValidatorFn, FormBuilder } from '@angular/forms';
 
 export interface Field {
   name: string;
@@ -31,14 +31,14 @@ export class HierarchyHelper {
     this.formGroup = form;
     this.hierarchy = hierarchy;
 
-    this.createHierarchyNodes(this.hierarchy);
-    this.subscribeValueChanges(this.hierarchy);
+    this.createHierarchyNodes();
+    this.subscribeValueChanges();
 
     console.log(this.hierarchyNodes);
   }
 
-  private createHierarchyNodes(controls: Field[]) {
-    controls.forEach(control => {
+  private createHierarchyNodes() {
+    this.hierarchy.forEach(control => {
       if (control.conditions !== undefined) {
         control.conditions.forEach(condition => {
           for (let index = 0; index < condition.subcontrols.length; index++) {
@@ -66,8 +66,8 @@ export class HierarchyHelper {
     });
   }
 
-  private subscribeValueChanges(controls: Field[]) {
-    controls.forEach(control => {
+  private subscribeValueChanges() {
+    this.hierarchy.forEach(control => {
       this.formGroup.get(control.name).valueChanges.subscribe(newValue => {
         const oldValue = this.formGroup.value[control.name];
         const targetNode = this.hierarchy.find(node => node.name === control.name);

@@ -27,7 +27,7 @@ export class UserDetailFormComponent implements OnInit {
   hierarchyHelper = new HierarchyHelper();
   result: object;
 
-  testControl: Field[] = [{
+  controls: Field[] = [{
     name: 'fullName',
     value: 'Siriwasan',
     validation: Validators.required
@@ -99,7 +99,7 @@ export class UserDetailFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
     this.createForm();
-    this.hierarchyHelper.initializeHierarchy(this.testForm, this.testControl);
+    this.hierarchyHelper.initializeHierarchy(this.testForm, this.controls);
   }
 
   ngOnInit() {
@@ -108,7 +108,7 @@ export class UserDetailFormComponent implements OnInit {
   createForm() {
     this.testForm = this.formBuilder.group({});
 
-    this.testControl.forEach(e => {
+    this.controls.forEach(e => {
       this.testForm.addControl(e.name, this.formBuilder.control(e.value, e.validation));
     });
   }
