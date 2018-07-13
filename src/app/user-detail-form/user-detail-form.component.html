@@ -72,10 +72,10 @@
 
   <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('kindOfPet')">
     What kind of pet do you have?:
-    <mat-checkbox class="example-check-box" formControlName="dog">Dog</mat-checkbox>
-    <mat-checkbox class="example-check-box" formControlName="cat">Cat</mat-checkbox>
-    <mat-checkbox class="example-check-box" formControlName="mouse">Mouse</mat-checkbox>
-    <mat-checkbox class="example-check-box" formControlName="bird">Bird</mat-checkbox>
+    <mat-checkbox class="example-check-box" [indeterminate]="testForm.value['dog'] === null" formControlName="dog">Dog</mat-checkbox>
+    <mat-checkbox class="example-check-box" [indeterminate]="testForm.value['cat'] === null" formControlName="cat">Cat</mat-checkbox>
+    <mat-checkbox class="example-check-box" [indeterminate]="testForm.value['mouse'] === null" formControlName="mouse">Mouse</mat-checkbox>
+    <mat-checkbox class="example-check-box" [indeterminate]="testForm.value['bird'] === null" formControlName="bird">Bird</mat-checkbox>
   </div>
 
   <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('favoriteFood')">

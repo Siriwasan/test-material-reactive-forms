@@ -71,8 +71,10 @@ export class UserDetailFormComponent implements OnInit {
     }]
   }, {
     name: 'dog',
+    value: true
   }, {
     name: 'cat',
+    value: false,
     conditions: [{
       values: [true],
       subcontrols: ['favoriteFood']
