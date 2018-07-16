@@ -24,69 +24,8 @@ import { PINValidator } from '../validators/PIN.validator';
 })
 export class UserDetailFormComponent implements OnInit {
   userDetailForm: FormGroup;
-  hierarchyHelper = new MaterialReactiveFormHelper();
+  materialReactiveFormHelper = new MaterialReactiveFormHelper();
   result: object;
-
-  // controls: Field[] = [{
-  //   name: 'fullName',
-  //   value: 'Siriwasan',
-  //   validation: Validators.required
-  // }, {
-  //   name: 'PIN',
-  //   value: '123',
-  //   validation: Validators.compose([
-  //       Validators.required,
-  //       PINValidator.validPIN
-  //     ])
-  // }, {
-  //   name: 'sex',
-  // }, {
-  //   name: 'dateOfBirth',
-  // }, {
-  //   name: 'maritalStatus',
-  //   conditions: [{
-  //     values: ['Married'],
-  //     subcontrols: ['numberOfChild', 'marriedDate']
-  //   }, {
-  //     values: ['Divorce'],
-  //     subcontrols: ['numberOfChild', 'marriedDate', 'divorceDate']
-  //   }]
-  // }, {
-  //   name: 'numberOfChild',
-  // }, {
-  //   name: 'marriedDate',
-  // }, {
-  //   name: 'divorceDate',
-  // }, {
-  //   name: 'loveAnimal',
-  //   conditions: [{
-  //     values: ['Yes', 'NotSure'],
-  //     subcontrols: ['havePet'],
-  //   }]
-  // }, {
-  //   name: 'havePet',
-  //   conditions: [{
-  //     values: ['Yes'],
-  //     subcontrols: ['kindOfPet', 'dog', 'cat', 'mouse', 'bird']
-  //   }]
-  // }, {
-  //   name: 'dog',
-  //   value: true
-  // }, {
-  //   name: 'cat',
-  //   value: false,
-  //   conditions: [{
-  //     values: [true],
-  //     subcontrols: ['favoriteFood']
-  //   }]
-  // }, {
-  //   name: 'mouse',
-  // }, {
-  //   name: 'bird',
-  // }, {
-  //   name: 'favoriteFood',
-  //   value: 'Pizza'
-  // }];
 
   controls = {
     fullName: {
@@ -155,7 +94,8 @@ export class UserDetailFormComponent implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder) {
-    this.userDetailForm = this.hierarchyHelper.createMaterialReactiveForm(this.formBuilder, this.controls);
+    this.userDetailForm = this.materialReactiveFormHelper
+                              .createMaterialReactiveForm(this.formBuilder, this.controls);
   }
 
   ngOnInit() {

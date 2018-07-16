@@ -28,7 +28,7 @@
     <mat-datepicker #DOBDatePicker></mat-datepicker>
   </mat-form-field>
 
-  <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('maritalStatus')">
+  <div class="label-text" *ngIf="materialReactiveFormHelper.showHierarchy('maritalStatus')">
     Marrital Status:
     <mat-radio-group class="example-radio-group" formControlName="maritalStatus">
       <mat-radio-button class="example-radio-button" value="Single">Single</mat-radio-button>
@@ -37,23 +37,23 @@
     </mat-radio-group>
   </div>
 
-  <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('numberOfChild')">
+  <mat-form-field class="example-full-width" *ngIf="materialReactiveFormHelper.showHierarchy('numberOfChild')">
     <input matInput type="number" placeholder="Number of child" formControlName="numberOfChild">
   </mat-form-field>
 
-  <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('marriedDate')">
+  <mat-form-field class="example-full-width" *ngIf="materialReactiveFormHelper.showHierarchy('marriedDate')">
     <input matInput [matDatepicker]="marriedDatePicker" placeholder="Married Date" formControlName="marriedDate">
     <mat-datepicker-toggle matSuffix [for]="marriedDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #marriedDatePicker></mat-datepicker>
   </mat-form-field>
 
-  <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('divorceDate')">
+  <mat-form-field class="example-full-width" *ngIf="materialReactiveFormHelper.showHierarchy('divorceDate')">
     <input matInput [matDatepicker]="divorceDatePicker" placeholder="Divorce Date" formControlName="divorceDate">
     <mat-datepicker-toggle matSuffix [for]="divorceDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #divorceDatePicker></mat-datepicker>
   </mat-form-field>
 
-  <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('loveAnimal')">
+  <div class="label-text" *ngIf="materialReactiveFormHelper.showHierarchy('loveAnimal')">
     Do you love animal?:
     <mat-radio-group class="example-radio-group" formControlName="loveAnimal">
       <mat-radio-button class="example-radio-button" value="Yes">Yes</mat-radio-button>
@@ -62,7 +62,7 @@
     </mat-radio-group>
   </div>
 
-  <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('havePet')">
+  <div class="label-text" *ngIf="materialReactiveFormHelper.showHierarchy('havePet')">
     Do you have pet?:
     <mat-radio-group class="example-radio-group" formControlName="havePet">
       <mat-radio-button class="example-radio-button" value="Yes">Yes</mat-radio-button>
@@ -70,7 +70,7 @@
     </mat-radio-group>
   </div>
 
-  <div class="label-text" *ngIf="hierarchyHelper.showHierarchy('kindOfPet')">
+  <div class="label-text" *ngIf="materialReactiveFormHelper.showHierarchy('kindOfPet')">
     What kind of pet do you have?:
     <mat-checkbox class="example-check-box" [indeterminate]="userDetailForm.value['dog'] === null" formControlName="dog">Dog</mat-checkbox>
     <mat-checkbox class="example-check-box" [indeterminate]="userDetailForm.value['cat'] === null" formControlName="cat">Cat</mat-checkbox>
@@ -78,7 +78,7 @@
     <mat-checkbox class="example-check-box" [indeterminate]="userDetailForm.value['bird'] === null" formControlName="bird">Bird</mat-checkbox>
   </div>
 
-  <mat-form-field class="example-full-width" *ngIf="hierarchyHelper.showHierarchy('favoriteFood')">
+  <mat-form-field class="example-full-width" *ngIf="materialReactiveFormHelper.showHierarchy('favoriteFood')">
     <mat-select placeholder="Favorite food" formControlName="favoriteFood">
       <mat-option value="Steak">Steak</mat-option>
       <mat-option value="Pizza">Pizza</mat-option>
