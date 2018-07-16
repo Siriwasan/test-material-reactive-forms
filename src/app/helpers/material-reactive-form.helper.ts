@@ -47,7 +47,7 @@ export class MaterialReactiveFormHelper {
 
   private initializeHierarchy() {
     this.createHierarchyNodes();
-    this.subscribeValueChanges();
+    // this.subscribeValueChanges();
 
     console.log(this.fieldNodes);
   }
@@ -135,6 +135,14 @@ export class MaterialReactiveFormHelper {
           return true;
         }
       }
+    }
+
+    // reset control if it is not show
+    const sub = this.formGroup.get(controlName);
+
+    // if it is a angular material control, reset value
+    if (sub !== null) {
+      sub.reset();
     }
 
     return false;

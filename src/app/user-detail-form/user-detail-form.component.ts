@@ -54,12 +54,14 @@ export class UserDetailFormComponent implements OnInit {
     marriedDate: {},
     divorceDate: {},
     loveAnimal: {
+      value: 'Yes',
       conditions: [{
         values: ['Yes', 'NotSure'],
         subcontrols: ['havePet'],
       }]
     },
     havePet: {
+      value: 'Yes',
       conditions: [{
         values: ['Yes'],
         subcontrols: ['kindOfPet', 'dog', 'cat', 'mouse', 'bird']
@@ -117,5 +119,9 @@ export class UserDetailFormComponent implements OnInit {
     return this.userDetailForm.get(controlName).hasError(validatonType) &&
       (this.userDetailForm.get(controlName).dirty || this.userDetailForm.get(controlName).touched);
     // return true;
+  }
+
+  showControl(controlName: string) {
+    return this.materialReactiveFormHelper.showHierarchy(controlName);
   }
 }
