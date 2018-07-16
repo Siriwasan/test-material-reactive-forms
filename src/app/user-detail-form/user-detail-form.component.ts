@@ -122,6 +122,6 @@ export class UserDetailFormComponent implements OnInit {
   }
 
   showControl(controlName: string) {
-    return this.materialReactiveFormHelper.showHierarchy(controlName);
+    return this.materialReactiveFormHelper.showControl(controlName);
   }
 }

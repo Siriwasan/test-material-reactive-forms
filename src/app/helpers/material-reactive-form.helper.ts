@@ -114,7 +114,7 @@ export class MaterialReactiveFormHelper {
     });
   }
 
-  showHierarchy(controlName: string): boolean {
+  showControl(controlName: string): boolean {
     if (this.isAlwayShow) {
       return true;
     }
