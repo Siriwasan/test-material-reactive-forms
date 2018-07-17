@@ -117,3 +117,11 @@ this.fields =
     return Object.assign({}, {name: prop} , controls[prop]);
   });
 ```
+
+## How to access Angular Material properties
+
+``` html
+::ng-deep .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background: gray;
+}
+```

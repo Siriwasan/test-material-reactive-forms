@@ -2,14 +2,14 @@
 
   <mat-form-field class="example-full-width">
     <input matInput placeholder="Full Name" formControlName="fullName">
-    <mat-error *ngFor="let validation of validation_messages.fullName">
+    <mat-error *ngFor="let validation of getValidationMessage('fullName')">
       <mat-error class="error-message" *ngIf="checkValidation('fullName', validation.type)">{{validation.message}}</mat-error>
     </mat-error>
   </mat-form-field>
 
   <mat-form-field class="example-full-width">
     <input matInput placeholder="Personal Indification Number" formControlName="PIN">
-    <mat-error *ngFor="let validation of validation_messages.PIN">
+    <mat-error *ngFor="let validation of getValidationMessage('PIN')">
       <mat-error class="error-message" *ngIf="checkValidation('PIN', validation.type)">{{validation.message}}</mat-error>
     </mat-error>
   </mat-form-field>

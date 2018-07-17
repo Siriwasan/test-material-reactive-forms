@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { MaterialReactiveFormHelper, Field, FieldContent } from '../helpers/material-reactive-form.helper';
+import { MaterialReactiveFormHelper, Field, FieldContent, ValidationMessage } from '../helpers/material-reactive-form.helper';
 import { PINValidator } from '../validators/PIN.validator';
 
 @Component({
   selector: 'app-user-detail-form',
   templateUrl: './user-detail-form.component.html',
   styleUrls: ['./user-detail-form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   providers: [
     // The locale would typically be provided on the root module of your application. We do it at
     // the component level here, due to limitations of our example generation script.
@@ -30,14 +31,25 @@ export class UserDetailFormComponent implements OnInit {
   controls: FieldContent[] = [{
     fullName: {
       value: 'Siriwasan',
-      validation: Validators.required
+      validation: Validators.required,
+      validation_message: [
+        { type: 'required', message: 'Full name is required' }
+      ]
     },
     PIN: {
       value: '123',
       validation: Validators.compose([
           Validators.required,
-          PINValidator.validPIN
-        ])
+          Validators.minLength(13),
+          Validators.maxLength(13),
+          PINValidator.validCheckDigit
+        ]),
+      validation_message: [
+        { type: 'required', message: 'PIN is required' },
+        { type: 'minlength', message: 'PIN must be at least 13 characters long'},
+        { type: 'maxlength', message: 'PIN must be at least 13 characters long'},
+        { type: 'validPIN', message: 'เลขบัตรประชาชนผิด' },
+      ]
     },
     sex: {},
     dateOfBirth: {},
@@ -105,17 +117,6 @@ export class UserDetailFormComponent implements OnInit {
     }
   }];
 
-  validation_messages = {
-    fullName: [
-      { type: 'required', message: 'Full name is required' }
-    ],
-    PIN: [
-      { type: 'required', message: 'PIN is required' },
-      { type: 'PINlenght', message: 'PIN must be at least 13 characters long'},
-      { type: 'validPIN', message: 'เลขบัตรประชาชนผิด' },
-    ]
-  };
-
   constructor(private formBuilder: FormBuilder) {
     this.userDetailForm = this.materialReactiveFormHelper
                               .createMaterialReactiveForm(this.formBuilder, this.controls);
@@ -144,5 +145,9 @@ export class UserDetailFormComponent implements OnInit {
 
   showControl(controlName: string) {
     return this.materialReactiveFormHelper.showControl(controlName);
+  }
+
+  getValidationMessage(controlName: string): ValidationMessage[] {
+    return this.materialReactiveFormHelper.getValidationMessage(controlName);
   }
 }

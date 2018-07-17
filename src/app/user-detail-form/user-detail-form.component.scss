@@ -1,32 +1,54 @@
-.label-text {
-  font-family: Roboto;
-}
+app-user-detail-form {
+  // Workaround for https://github.com/angular/material2/issues/4580.
+  mat-form-field .mat-form-field {
+    &-underline {
+      position: static;
+    }
+    &-subscript-wrapper {
+      position: static;
+    }
+  }
 
-.example-form {
-  min-width: 150px;
-  max-width: 700px;
-}
+  .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background: gray;
+  }
 
-.example-full-width {
-  width: 100%;
-}
+  .label-text {
+    font-family: Roboto;
+  }
 
-.example-radio-button {
-  margin: 5px;
-}
+  .example-form {
+    min-width: 150px;
+    max-width: 700px;
+  }
 
-.example-check-box {
-  margin: 5px;
-}
+  .example-full-width {
+    width: 100%;
+  }
 
-.example-button {
-  margin: 5px;
-}
+  .example-radio-button {
+    margin: 5px;
+  }
 
-::ng-deep .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
-  background: gray;
-}
+  .example-check-box {
+    margin: 5px;
+  }
 
-.error-message {
-  font-size: 12px;
+  .example-button {
+    margin: 5px;
+  }
+
+  .error-message {
+    font-size: 12px;
+  }
+
+  .double-line-hint {
+    .mat-input-hint-wrapper {
+      flex-wrap: wrap;
+
+      .hint-line {
+        flex: 0 0 100%;
+      }
+    }
+  }
 }

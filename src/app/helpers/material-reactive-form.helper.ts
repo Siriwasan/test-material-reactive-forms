@@ -8,7 +8,13 @@ export interface Field {
   name?: string;
   value?: any;
   validation?: ValidatorFn;
+  validation_message?: ValidationMessage[];
   conditions?: Condition[][]; // External array is AND condition, Interanl array is OR condition
+}
+
+export interface ValidationMessage {
+  type: string;
+  message: string;
 }
 
 export interface Condition {
@@ -132,5 +138,15 @@ export class MaterialReactiveFormHelper {
     // If we made it this far, objects
     // are considered equivalent
     return true;
+  }
+
+  getValidationMessage(controlName: string): ValidationMessage[] {
+    const targetNode = this.fields.find(node => node.name === controlName);
+
+    if (targetNode === undefined || targetNode.validation_message === undefined) {
+      return null;
+    }
+
+    return targetNode.validation_message;
   }
 }
