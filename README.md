@@ -106,3 +106,14 @@ or
 
 in the .angular-cli.json file
 "defaults": { "serve": { "host": "0.0.0.0", "port": 4201 },
+
+## Re-mappind destructure object
+
+``` tsc
+// remap the API to be suitable for iterating over it
+this.fields =
+  Object.keys(controls)
+    .map(prop => {
+    return Object.assign({}, {name: prop} , controls[prop]);
+  });
+```

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { MaterialReactiveFormHelper } from '../helpers/material-reactive-form.helper';
+import { MaterialReactiveFormHelper, Field, FieldContent } from '../helpers/material-reactive-form.helper';
 import { PINValidator } from '../validators/PIN.validator';
 
 @Component({
@@ -27,7 +27,7 @@ export class UserDetailFormComponent implements OnInit {
   materialReactiveFormHelper = new MaterialReactiveFormHelper();
   result: object;
 
-  controls = {
+  controls: FieldContent[] = [{
     fullName: {
       value: 'Siriwasan',
       validation: Validators.required
@@ -43,76 +43,66 @@ export class UserDetailFormComponent implements OnInit {
     dateOfBirth: {},
     maritalStatus: {},
     numberOfChild: {
-      conditions: [{
-        parentControl: 'maritalStatus',
-        values: ['Married', 'Divorce']
-      }]
+      conditions: [
+        [{parentControl: 'maritalStatus', value: 'Married'}, {parentControl: 'maritalStatus', value: 'Divorce'}],
+      ]
     },
     marriedDate: {
-      conditions: [{
-        parentControl: 'maritalStatus',
-        values: ['Married', 'Divorce']
-      }]
+      conditions: [
+        [{parentControl: 'maritalStatus', value: 'Married'}, {parentControl: 'maritalStatus', value: 'Divorce'}],
+      ]
     },
     divorceDate: {
-      conditions: [{
-        parentControl: 'maritalStatus',
-        values: ['Divorce']
-      }]
+      conditions: [
+        [{parentControl: 'maritalStatus', value: 'Divorce'}],
+      ]
     },
     loveAnimal: {
       value: 'Yes',
     },
     havePet: {
       value: 'Yes',
-      conditions: [{
-        parentControl: 'loveAnimal',
-        values: ['Yes', 'NotSure']
-      }]
+      conditions: [
+        [{parentControl: 'loveAnimal', value: 'Yes'}],
+      ]
     },
     kindOfPet: {
-      conditions: [{
-        parentControl: 'havePet',
-        values: ['Yes']
-      }]
+      conditions: [
+        [{parentControl: 'havePet', value: 'Yes'}],
+      ]
     },
     dog: {
       value: true,
-      conditions: [{
-        parentControl: 'havePet',
-        values: ['Yes']
-      }]
+      conditions: [
+        [{parentControl: 'havePet', value: 'Yes'}],
+      ]
     },
     cat: {
       value: false,
-      conditions: [{
-        parentControl: 'havePet',
-        values: ['Yes']
-      }]
+      conditions: [
+        [{parentControl: 'havePet', value: 'Yes'}],
+      ]
     },
     mouse: {
-      conditions: [{
-        parentControl: 'havePet',
-        values: ['Yes']
-      }]
+      conditions: [
+        [{parentControl: 'havePet', value: 'Yes'}],
+      ]
     },
     bird: {
-      conditions: [{
-        parentControl: 'havePet',
-        values: ['Yes']
-      }]
+      conditions: [
+        [{parentControl: 'havePet', value: 'Yes'}],
+      ]
     },
     favoriteFood: {
       value: 'Pizza',
-      conditions: [{
-        parentControl: 'dog',
-        values: [true]
-      }, {
-        parentControl: 'sex',
-        values: ['Male']
-      }]
+      conditions: [
+        [{parentControl: 'dog', value: true}],
+        [{parentControl: 'cat', value: true}, {parentControl: 'bird', value: true}],
+        [{parentControl: 'sex', value: 'Female'}],
+        [{parentControl: 'numberOfChild', value: 3}],
+      ]
     }
-  };
+  }];
 
   validation_messages = {
     fullName: [

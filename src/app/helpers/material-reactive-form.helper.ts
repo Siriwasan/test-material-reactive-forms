@@ -1,15 +1,19 @@
 import { FormGroup, ValidatorFn, FormBuilder } from '@angular/forms';
 
+export interface FieldContent {
+  [key: string]: Field;
+}
+
 export interface Field {
-  name: string;
+  name?: string;
   value?: any;
   validation?: ValidatorFn;
-  conditions?: Condition[];
+  conditions?: Condition[][]; // External array is AND condition, Interanl array is OR condition
 }
 
 export interface Condition {
   parentControl: string;
-  values: any[]; // difference conditions can have same result, difference conditions can have partially same result
+  value: any;
 }
 
 interface FieldNode {
@@ -20,19 +24,26 @@ interface FieldNode {
 
 export class MaterialReactiveFormHelper {
   private formGroup: FormGroup;
-  private fields: Field[];
+  private fields: Field[] = [];
   private fieldNodes: FieldNode[] = [];
   private isAlwayShow = false;
 
   constructor() { }
 
-  createMaterialReactiveForm(formBuilder: FormBuilder, controls: object): FormGroup {
+  createMaterialReactiveForm(formBuilder: FormBuilder, controls: FieldContent[]): FormGroup {
     // remap the API to be suitable for iterating over it
-    this.fields =
-      Object.keys(controls)
-        .map(prop => {
-          return Object.assign({}, {name: prop} , controls[prop]);
-        });
+    // this.fields =
+    //   Object.keys(controls)
+    //     .map(prop => {
+    //       return Object.assign({}, {name: prop} , controls[prop]);
+    //     });
+
+    controls.forEach(e => {
+      Object.keys(e)
+            .map(prop => {
+              this.fields.push(Object.assign({}, {name: prop} , e[prop]));
+            });
+    });
 
     this.formGroup = formBuilder.group({});
     this.fields.forEach(e => {
@@ -48,7 +59,7 @@ export class MaterialReactiveFormHelper {
     // this.createHierarchyNodes();
     // this.subscribeValueChanges();
 
-    console.log(this.fieldNodes);
+    console.log(this.fields);
   }
 
   // private createHierarchyNodes() {
@@ -163,15 +174,28 @@ export class MaterialReactiveFormHelper {
 
     for (let index = 0; index < targetNode.conditions.length; index++) {
       const condition = targetNode.conditions[index];
-      const parentControlValue = this.formGroup.get(condition.parentControl).value;
 
       let foundValue = false;
 
-      for (let i = 0; i < condition.values.length; i++) {
-        const value = condition.values[i];
+      // for (let i = 0; i < condition.values.length; i++) {
+      //   const value = condition.values[i];
+      //   const parentControlValue = this.formGroup.get(condition.parentControl).value;
 
-        if (this.isEquivalent(parentControlValue, value)) {
-          foundValue = true;
+      //   if (this.isEquivalent(parentControlValue, value)) {
+      //     foundValue = true;
+      //   }
+      // }
+
+      for (let i = 0; i < condition.length; i++) {
+        const subcondition = condition[i];
+
+        const value = subcondition.value;
+        const parentControl = this.formGroup.get(subcondition.parentControl);
+
+        if (parentControl !== null) {
+          if (this.isEquivalent(parentControl.value, value)) {
+            foundValue = true;
+          }
         }
       }
 
@@ -204,6 +228,7 @@ export class MaterialReactiveFormHelper {
     if (typeof a === 'object' && typeof b === 'object') {
       // console.log('a:' + typeof a + ' b:' + typeof b);
       // console.log('a:' + a + ' b:' + b);
+      console.log('It\'s object');
       return this.compareObject(a, b);
     }
 
