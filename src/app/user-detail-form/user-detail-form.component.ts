@@ -44,17 +44,17 @@ export class UserDetailFormComponent implements OnInit {
     maritalStatus: {},
     numberOfChild: {
       conditions: [
-        [{parentControl: 'maritalStatus', value: 'Married'}, {parentControl: 'maritalStatus', value: 'Divorce'}],
+        [{parent: 'maritalStatus', value: 'Married'}, {parent: 'maritalStatus', value: 'Divorce'}],
       ]
     },
     marriedDate: {
       conditions: [
-        [{parentControl: 'maritalStatus', value: 'Married'}, {parentControl: 'maritalStatus', value: 'Divorce'}],
+        [{parent: 'maritalStatus', value: 'Married'}, {parent: 'maritalStatus', value: 'Divorce'}],
       ]
     },
     divorceDate: {
       conditions: [
-        [{parentControl: 'maritalStatus', value: 'Divorce'}],
+        [{parent: 'maritalStatus', value: 'Divorce'}],
       ]
     },
     loveAnimal: {
@@ -63,43 +63,44 @@ export class UserDetailFormComponent implements OnInit {
     havePet: {
       value: 'Yes',
       conditions: [
-        [{parentControl: 'loveAnimal', value: 'Yes'}],
+        [{parent: 'loveAnimal', value: 'Yes'}],
       ]
     },
     kindOfPet: {
       conditions: [
-        [{parentControl: 'havePet', value: 'Yes'}],
+        [{parent: 'havePet', value: 'Yes'}],
       ]
     },
     dog: {
       value: true,
       conditions: [
-        [{parentControl: 'havePet', value: 'Yes'}],
+        [{parent: 'havePet', value: 'Yes'}],
       ]
     },
     cat: {
       value: false,
       conditions: [
-        [{parentControl: 'havePet', value: 'Yes'}],
+        [{parent: 'havePet', value: 'Yes'}],
       ]
     },
     mouse: {
       conditions: [
-        [{parentControl: 'havePet', value: 'Yes'}],
+        [{parent: 'havePet', value: 'Yes'}],
       ]
     },
     bird: {
       conditions: [
-        [{parentControl: 'havePet', value: 'Yes'}],
+        [{parent: 'havePet', value: 'Yes'}],
       ]
     },
     favoriteFood: {
       value: 'Pizza',
       conditions: [
-        [{parentControl: 'dog', value: true}],
-        [{parentControl: 'cat', value: true}, {parentControl: 'bird', value: true}],
-        [{parentControl: 'sex', value: 'Female'}],
-        [{parentControl: 'numberOfChild', value: 3}],
+        [{parent: 'dog', value: true}],
+        [{parent: 'cat', value: true}, {parent: 'bird', value: true}],
+        [{parent: 'sex', value: 'Female'}],
+        [{parent: 'numberOfChild', value: 3}],
+        [{parent: 'fullName', value: 'Art'}],
       ]
     }
   }];
