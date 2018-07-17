@@ -41,46 +41,76 @@ export class UserDetailFormComponent implements OnInit {
     },
     sex: {},
     dateOfBirth: {},
-    maritalStatus: {
+    maritalStatus: {},
+    numberOfChild: {
       conditions: [{
-        values: ['Married'],
-        subcontrols: ['numberOfChild', 'marriedDate']
-      }, {
-        values: ['Divorce'],
-        subcontrols: ['numberOfChild', 'marriedDate', 'divorceDate']
+        parentControl: 'maritalStatus',
+        values: ['Married', 'Divorce']
       }]
     },
-    numberOfChild: {},
-    marriedDate: {},
-    divorceDate: {},
+    marriedDate: {
+      conditions: [{
+        parentControl: 'maritalStatus',
+        values: ['Married', 'Divorce']
+      }]
+    },
+    divorceDate: {
+      conditions: [{
+        parentControl: 'maritalStatus',
+        values: ['Divorce']
+      }]
+    },
     loveAnimal: {
       value: 'Yes',
-      conditions: [{
-        values: ['Yes', 'NotSure'],
-        subcontrols: ['havePet'],
-      }]
     },
     havePet: {
       value: 'Yes',
       conditions: [{
-        values: ['Yes'],
-        subcontrols: ['kindOfPet', 'dog', 'cat', 'mouse', 'bird']
+        parentControl: 'loveAnimal',
+        values: ['Yes', 'NotSure']
+      }]
+    },
+    kindOfPet: {
+      conditions: [{
+        parentControl: 'havePet',
+        values: ['Yes']
       }]
     },
     dog: {
-      value: true
+      value: true,
+      conditions: [{
+        parentControl: 'havePet',
+        values: ['Yes']
+      }]
     },
     cat: {
       value: false,
       conditions: [{
-        values: [true],
-        subcontrols: ['favoriteFood']
+        parentControl: 'havePet',
+        values: ['Yes']
       }]
     },
-    mouse: {},
-    bird: {},
+    mouse: {
+      conditions: [{
+        parentControl: 'havePet',
+        values: ['Yes']
+      }]
+    },
+    bird: {
+      conditions: [{
+        parentControl: 'havePet',
+        values: ['Yes']
+      }]
+    },
     favoriteFood: {
-      value: 'Pizza'
+      value: 'Pizza',
+      conditions: [{
+        parentControl: 'dog',
+        values: [true]
+      }, {
+        parentControl: 'sex',
+        values: ['Male']
+      }]
     }
   };
 

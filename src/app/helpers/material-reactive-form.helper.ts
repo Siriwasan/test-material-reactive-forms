@@ -8,10 +8,9 @@ export interface Field {
 }
 
 export interface Condition {
+  parentControl: string;
   values: any[]; // difference conditions can have same result, difference conditions can have partially same result
-  subcontrols: string[]; // one result can have many control
 }
-// Note: if no any control declaration in hierarchy, default is SHOW
 
 interface FieldNode {
   controlName: string;
@@ -46,106 +45,150 @@ export class MaterialReactiveFormHelper {
   }
 
   private initializeHierarchy() {
-    this.createHierarchyNodes();
+    // this.createHierarchyNodes();
     // this.subscribeValueChanges();
 
     console.log(this.fieldNodes);
   }
 
-  private createHierarchyNodes() {
-    this.fields.forEach(control => {
-      if (control.conditions !== undefined) {
-        control.conditions.forEach(condition => {
-          for (let index = 0; index < condition.subcontrols.length; index++) {
-            const subcontrol = condition.subcontrols[index];
+  // private createHierarchyNodes() {
+  //   this.fields.forEach(control => {
+  //     if (control.conditions !== undefined) {
+  //       control.conditions.forEach(condition => {
+  //         for (let index = 0; index < condition.subcontrols.length; index++) {
+  //           const subcontrol = condition.subcontrols[index];
 
-            const newNode: FieldNode = {
-              controlName: null,
-              parentControl: control.name,
-              conditionValues: []
-            };
+  //           const newNode: FieldNode = {
+  //             controlName: null,
+  //             parentControl: control.name,
+  //             conditionValues: []
+  //           };
 
-            const sameControlandParentNode =
-              this.fieldNodes.find(node => node.controlName === subcontrol && node.parentControl === control.name);
+  //           const sameControlandParentNode =
+  //             this.fieldNodes.find(node => node.controlName === subcontrol && node.parentControl === control.name);
 
-            if ( sameControlandParentNode === undefined) {
-              newNode.controlName = subcontrol;
-              newNode.conditionValues.push(...condition.values);
-              this.fieldNodes.push(newNode);
-            } else {
-              sameControlandParentNode.conditionValues.push(...condition.values);
-            }
-          }
-        });
-      }
-    });
-  }
+  //           if ( sameControlandParentNode === undefined) {
+  //             newNode.controlName = subcontrol;
+  //             newNode.conditionValues.push(...condition.values);
+  //             this.fieldNodes.push(newNode);
+  //           } else {
+  //             sameControlandParentNode.conditionValues.push(...condition.values);
+  //           }
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
-  private subscribeValueChanges() {
-    this.fields.forEach(control => {
-      this.formGroup.get(control.name).valueChanges.subscribe(newValue => {
-        const oldValue = this.formGroup.value[control.name];
-        const targetNode = this.fields.find(node => node.name === control.name);
+  // private subscribeValueChanges() {
+  //   this.fields.forEach(control => {
+  //     this.formGroup.get(control.name).valueChanges.subscribe(newValue => {
+  //       const oldValue = this.formGroup.value[control.name];
+  //       const targetNode = this.fields.find(node => node.name === control.name);
 
-        if (control.conditions !== undefined) {
-          for (let index = 0; index < targetNode.conditions.length; index++) {
-            const condition = targetNode.conditions[index];
+  //       if (control.conditions !== undefined) {
+  //         for (let index = 0; index < targetNode.conditions.length; index++) {
+  //           const condition = targetNode.conditions[index];
 
-            // if old value is in hierarchy, reset controls
-            if (condition.values.find(value => this.isEquivalent(value, oldValue)) !== undefined) {
-              const newCondition = targetNode.conditions.find(cc => cc.values.find(value => this.isEquivalent(value, newValue)));
+  //           // if old value is in hierarchy, reset controls
+  //           if (condition.values.find(value => this.isEquivalent(value, oldValue)) !== undefined) {
+  //             const newCondition = targetNode.conditions.find(cc => cc.values.find(value => this.isEquivalent(value, newValue)));
 
-              condition.subcontrols.forEach(subcontrol => {
-                // if new value has no condition or new value's condition is not the same, reset the value
-                if (newCondition === undefined || newCondition.subcontrols.find(p => p === subcontrol) === undefined) {
-                  const sub = this.formGroup.get(subcontrol);
+  //             condition.subcontrols.forEach(subcontrol => {
+  //               // if new value has no condition or new value's condition is not the same, reset the value
+  //               if (newCondition === undefined || newCondition.subcontrols.find(p => p === subcontrol) === undefined) {
+  //                 const sub = this.formGroup.get(subcontrol);
 
-                  // if it is a angular material control, reset value
-                  if (sub !== null) {
-                    sub.reset();
-                  }
-                }
-              });
-              break;
-            }
-          }
-        }
-      });
-    });
-  }
+  //                 // if it is a angular material control, reset value
+  //                 if (sub !== null) {
+  //                   sub.reset();
+  //                 }
+  //               }
+  //             });
+  //             break;
+  //           }
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
+
+  // showControl(controlName: string): boolean {
+  //   if (this.isAlwayShow) {
+  //     return true;
+  //   }
+
+  //   const targetNodes = this.fieldNodes.filter(node => node.controlName === controlName);
+
+  //   if (targetNodes.length === 0) {
+  //     return true;
+  //   }
+
+  //   for (let i = 0; i < targetNodes.length; i++) {
+  //     const node = targetNodes[i];
+
+  //     for (let index = 0; index < node.conditionValues.length; index++) {
+  //       const value = node.conditionValues[index];
+
+  //       if (this.isEquivalent(this.formGroup.get(node.parentControl).value, value)) {
+  //         return true;
+  //       }
+  //     }
+  //   }
+
+  //   // reset control if it is not show
+  //   const sub = this.formGroup.get(controlName);
+
+  //   // if it is a angular material control, reset value
+  //   if (sub !== null) {
+  //     sub.reset();
+  //   }
+
+  //   return false;
+  // }
 
   showControl(controlName: string): boolean {
     if (this.isAlwayShow) {
       return true;
     }
 
-    const targetNodes = this.fieldNodes.filter(node => node.controlName === controlName);
+    const targetNode = this.fields.find(node => node.name === controlName);
 
-    if (targetNodes.length === 0) {
+    // alway show if can't find control in fieldNodes or no any conditions
+    if (targetNode === undefined || targetNode.conditions === undefined) {
       return true;
     }
 
-    for (let i = 0; i < targetNodes.length; i++) {
-      const node = targetNodes[i];
+    let foundAllCondition = null;
 
-      for (let index = 0; index < node.conditionValues.length; index++) {
-        const value = node.conditionValues[index];
+    for (let index = 0; index < targetNode.conditions.length; index++) {
+      const condition = targetNode.conditions[index];
+      const parentControlValue = this.formGroup.get(condition.parentControl).value;
 
-        if (this.isEquivalent(this.formGroup.get(node.parentControl).value, value)) {
-          return true;
+      let foundValue = false;
+
+      for (let i = 0; i < condition.values.length; i++) {
+        const value = condition.values[i];
+
+        if (this.isEquivalent(parentControlValue, value)) {
+          foundValue = true;
         }
       }
+
+      foundAllCondition = foundValue ? (foundAllCondition !== false ? true : false) : false;
     }
 
     // reset control if it is not show
-    const sub = this.formGroup.get(controlName);
+    if (!foundAllCondition) {
+      const sub = this.formGroup.get(controlName);
 
-    // if it is a angular material control, reset value
-    if (sub !== null) {
-      sub.reset();
+      // if it is a angular material control, reset value
+      if (sub !== null) {
+        sub.reset();
+      }
     }
 
-    return false;
+    return foundAllCondition;
   }
 
   alwayShow(show: boolean = true) {
