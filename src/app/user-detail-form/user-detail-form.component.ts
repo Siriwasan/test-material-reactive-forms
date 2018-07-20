@@ -52,16 +52,23 @@ export class UserDetailFormComponent implements OnInit {
       ]
     },
     sex: {},
-    dateOfBirth: {},
+    dateOfBirth: {
+      validation: Validators.required,
+      validation_message: [
+        { type: 'required', message: 'date of birth is required' }
+      ]
+    },
     maritalStatus: {},
     numberOfChild: {
       conditions: [
-        [{parent: 'maritalStatus', value: 'Married'}, {parent: 'maritalStatus', value: 'Divorce'}],
+        [{parent: 'maritalStatus', value: 'Married'}],
+        [{parent: 'maritalStatus', value: 'Divorce'}],
       ]
     },
     marriedDate: {
       conditions: [
-        [{parent: 'maritalStatus', value: 'Married'}, {parent: 'maritalStatus', value: 'Divorce'}],
+        [{parent: 'maritalStatus', value: 'Married'}],
+        [{parent: 'maritalStatus', value: 'Divorce'}],
       ]
     },
     divorceDate: {
@@ -108,11 +115,8 @@ export class UserDetailFormComponent implements OnInit {
     favoriteFood: {
       value: 'Pizza',
       conditions: [
-        [{parent: 'dog', value: true}],
+        [{parent: 'dog', value: true}, {parent: 'mouse', value: true}, {parent: 'sex', value: 'Female'}],
         [{parent: 'cat', value: true}, {parent: 'bird', value: true}],
-        [{parent: 'sex', value: 'Female'}],
-        [{parent: 'numberOfChild', value: 3}],
-        [{parent: 'fullName', value: 'Art'}],
       ]
     }
   }];

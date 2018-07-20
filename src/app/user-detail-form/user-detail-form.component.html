@@ -26,6 +26,9 @@
     <input matInput [matDatepicker]="DOBDatePicker" placeholder="Date of Birth" formControlName="dateOfBirth">
     <mat-datepicker-toggle matSuffix [for]="DOBDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #DOBDatePicker></mat-datepicker>
+    <mat-error *ngFor="let validation of getValidationMessage('dateOfBirth')">
+      <mat-error class="error-message" *ngIf="checkValidation('dateOfBirth', validation.type)">{{validation.message}}</mat-error>
+    </mat-error>
   </mat-form-field>
 
   <div class="label-text">

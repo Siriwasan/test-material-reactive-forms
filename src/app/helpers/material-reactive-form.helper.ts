@@ -58,12 +58,12 @@ export class MaterialReactiveFormHelper {
       return true;
     }
 
-    let foundAllCondition = null;
+    let foundSomeCondition = null;
 
     for (let index = 0; index < targetNode.conditions.length; index++) {
       const condition = targetNode.conditions[index];
 
-      let foundValue = false;
+      let foundSubCondition = true;
 
       for (let i = 0; i < condition.length; i++) {
         const subcondition = condition[i];
@@ -72,17 +72,18 @@ export class MaterialReactiveFormHelper {
         const parentControl = this.formGroup.get(subcondition.parent);
 
         if (parentControl !== null) {
-          if (this.isEquivalent(parentControl.value, value)) {
-            foundValue = true;
-          }
+          foundSubCondition = foundSubCondition && this.isEquivalent(parentControl.value, value);
         }
       }
 
-      foundAllCondition = foundValue ? (foundAllCondition !== false ? true : false) : false;
+      if (foundSubCondition) {
+        foundSomeCondition = true;
+        break;
+      }
     }
 
     // reset control if it is not show
-    if (!foundAllCondition) {
+    if (!foundSomeCondition) {
       const sub = this.formGroup.get(controlName);
 
       // if it is a angular material control, reset value
@@ -91,7 +92,7 @@ export class MaterialReactiveFormHelper {
       }
     }
 
-    return foundAllCondition;
+    return foundSomeCondition;
   }
 
   alwayShow(show: boolean = true) {
